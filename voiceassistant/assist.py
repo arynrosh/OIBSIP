@@ -13,7 +13,7 @@ def speak(text): # Function that prints assistant responses in terminal.
     engine.say(text)
     engine.runAndWait()
 
-def respond_to_hello(): # Function  greets user when the user says hello.
+def respond_to_hello(): # Function greets user when the user says hello.
     speak("Hello! How can I help you today?")
 
 def tell_time(): # Function to tell the current time to the user.
@@ -23,9 +23,9 @@ def tell_time(): # Function to tell the current time to the user.
     time_str = f"{hours:02}:{minutes:02}"
     speak("The time is " + time_str)
 
-def tell_date(): # Function to tell the date to the user.
+def tell_date():  # Function to tell the date to the user.
     today = datetime.date.today()
-    date_str = today.strftime("%Y-%m-%d")
+    date_str = today.strftime("%B %d, %Y")
     speak("Today's date is " + date_str)
 
 def search_web(query): # Function that redirects user to the web for their query.
@@ -36,6 +36,7 @@ def listen_command():
     try:
         with sr.Microphone() as source:
             print("Listening...")
+            recognizer.adjust_for_ambient_noise(source) # Adjust for ambient noise
             audio = recognizer.listen(source, timeout=5)
             command = recognizer.recognize_google(audio)
             command = format_command(command)
@@ -60,17 +61,17 @@ def format_command(command): # Function to format user commands in terminal.
 def main():
     while True:
         command = listen_command()
-        if command.lower().startswith(("hello", "hey", "hi")):
-            respond_to_hello()
-        elif "time" in command:
-            tell_time()
-        elif "date" in command:
-            tell_date()
-        elif "exit" in command or "quit" in command:
-            speak("Goodbye!")
-            break
-        else:
-            if command:
+        if command:
+            if command.lower().startswith(("hello", "hey", "hi")):
+                respond_to_hello()
+            elif "time" in command:
+                tell_time()
+            elif "date" in command:
+                tell_date()
+            elif "exit" in command or "quit" in command:
+                speak("Goodbye!")
+                break
+            else:
                 search_web(command)
 
 if __name__ == "__main__":
